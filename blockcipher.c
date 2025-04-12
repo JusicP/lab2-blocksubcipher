@@ -20,8 +20,14 @@ int BlockCipherEncrypt(const char* plaintext, int plaintext_len, int* key, int k
         {
             int k = LetterToIndex(c);
             int ji = key[i % key_len];
-            int new_index = (k + ji) % alphabet_size;
-            ciphertext[i] = IndexToLetter(new_index, alphabet_size);
+            int a = (k + ji) % alphabet_size;
+            ciphertext[i] = IndexToLetter(a, alphabet_size);
+
+            if (i % key_len == 0)
+                printf("\n");
+
+            printf("a_%d(%d) = %d + %d (mod 26) = %d -> %c\n",
+                (i % key_len) + 1, k, k, ji, a, ciphertext[i]);
         }
         else
         {
@@ -43,8 +49,28 @@ int BlockCipherDecrypt(const char* ciphertext, int ciphertext_len, int* key, int
         {
             int k = LetterToIndex(c);
             int ji = key[i % key_len];
-            int new_index = (k - ji + alphabet_size) % alphabet_size;
-            plaintext[i] = IndexToLetter(new_index, alphabet_size);
+            // int a = (k - ji + alphabet_size) % alphabet_size;
+            // code below is equivalent to the above line
+            int raw = k - ji;
+            int a;
+
+            if (i % key_len == 0)
+                printf("\n");
+
+            if (raw < 0)
+            {
+                a = (raw + alphabet_size) % alphabet_size;
+                printf("a_%d^(-1)(%d) = %d - %d + 26 = %d -> %c\n",
+                       (i % key_len) + 1, k, k, ji, a, IndexToLetter(a, alphabet_size));
+            }
+            else
+            {
+                a = raw % alphabet_size;
+                printf("a_%d^(-1)(%d) = %d - %d = %d -> %c\n",
+                       (i % key_len) + 1, k, k, ji, a, IndexToLetter(a, alphabet_size));
+            }
+
+            plaintext[i] = IndexToLetter(a, alphabet_size);
         }
         else
         {

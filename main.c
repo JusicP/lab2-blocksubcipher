@@ -42,7 +42,6 @@ int main()
     }
 
     printf("Cryptosystem parameters:\n");
-    printf("Plaintext: %s\n", plaintext);
     printf("Key: j = {");
     for (i = 0; i < key_len; i++)
     {
@@ -52,23 +51,27 @@ int main()
     }
     printf("}\n");
     printf("Key length (block length): t = %d\n", key_len);
-    printf("Alphabet size: |X|= %d\n", alphabet_size);
+    printf("Alphabet size: |X| = %d\n", alphabet_size);
 
+    printf("\n[Bob] Encryption\n");
+    printf("Input plaintext: p = %s\n", plaintext);
     int result = BlockCipherEncrypt(plaintext, plaintext_len, key, key_len, alphabet_size, ciphertext, &ciphertext_len);
     if (result != 0)
     {
         printf("Encryption failed\n");
         return 1;
     } 
-    printf("Ciphertext: %.*s\n", ciphertext_len, ciphertext);
+    printf("Output ciphertext: q = %.*s\n", ciphertext_len, ciphertext);
 
+    printf("\n[Alice] Decryption\n");
+    printf("Input ciphertext: q = %.*s\n", ciphertext_len, ciphertext);
     result = BlockCipherDecrypt(ciphertext, ciphertext_len, key, key_len, alphabet_size, plaintext, &plaintext_len);
     if (result != 0)
     {
         printf("Decryption failed\n");
         return 1;
     }
-    printf("Plaintext: %.*s\n", plaintext_len, plaintext);
+    printf("Output plaintext: p = %.*s\n", plaintext_len, plaintext);
 
     getchar();
     getchar();
